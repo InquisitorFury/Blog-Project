@@ -12,7 +12,7 @@ class Post(models.Model):
         unique=True,
         help_text="A label for URL config",
         populate_from=['title'])
-    text = models.Field()
+    text = models.TextField()
     pub_date = models.DateField(default=date.today)
     tags = models.ManyToManyField(Tag)
     Startups = models.ManyToManyField(Startup)
