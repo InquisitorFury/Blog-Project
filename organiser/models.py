@@ -1,16 +1,16 @@
 from typing import Type
 from django.db import models
 from django.db.models.options import Options
-
+from django_extensions.db.fields import AutoSlugField
 # Create your models here.
 class Tag(models.Model):
     name = models.CharField(
         max_length=31,
         unique=True)
-    slug = models.SlugField(
+    slug = AutoSlugField(
         max_length=31,
-        unique=True,
-        help_text="A label for URL config")
+        help_text="A label for URL config",
+        populate_from=['name'])
     
     class Meta:
         ordering = ["name"]
@@ -22,10 +22,11 @@ class Startup(models.Model):
     name = models.CharField(
         max_length=31,
         db_index=True)
-    slug = models.SlugField(
+    slug = AutoSlugField(
         max_length=31,
         db_index=True,
-        help_text="A label for URL config")
+        help_text="A label for URL config",
+        populate_from=['name'])
     description = models.TextField()
     date_founded = models.DateField()
     contact = models.EmailField()
@@ -43,10 +44,11 @@ class newsLink(models.Model):
     title = models.CharField(
         max_length=31,
         db_index=True)
-    slug = models.SlugField(
+    slug = AutoSlugField(
         max_length=31,
         db_index=True,
-        help_text="A label for URL config") 
+        help_text="A label for URL config",
+        populate_from=['title']) 
     date_published = models.DateField()
     article_link = models.URLField()
 
