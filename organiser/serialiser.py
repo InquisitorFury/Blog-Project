@@ -26,6 +26,10 @@ class Startupserialser(Serializer):
     date_founded = DateField()
     contact = EmailField()
     website_link = URLField(max_length=255)
+    url = HyperlinkedIdentityField(
+        view_name='startupdetail',
+        lookup_field = "slug",
+    )
     tags = Tagserialiser(many=True) # many to many field
 
 class NewsLinkSerialiser(Serializer):
@@ -34,4 +38,4 @@ class NewsLinkSerialiser(Serializer):
     slug = SlugField(max_length=63)
     date_published = DateField()
     article_link = URLField(max_length=255)
-    startup = Startupserialser() #foreignKey or many to one relationship
+    startups = Startupserialser() #foreignKey or many to one relationship

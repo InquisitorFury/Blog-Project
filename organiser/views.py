@@ -4,7 +4,7 @@ from django.views.decorators.http import ( require_http_methods)
 from django.views import View
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import *
+from .models import Tag,newsLink,Startup
 import json
 # new imports for serialised models
 from datetime import date
@@ -128,5 +128,19 @@ class startupAPIList(APIView):
         s_startup_list = Startupserialser(startup_list, many=True, context={'request':request})
 
         return Response(s_startup_list.data)
-    
 
+
+class newslinkAPIDetail(APIView):
+    def get(self, request, startup_slug, newslink_slug):
+        newslink = newsLink.objects.get(slug=newslink_slug, startups=startup_slug)
+        s_newslink = NewsLinkSerialiser(newslink, context={'request':request})
+
+        return Response(s_newslink.data)
+    
+class newslinkAPIList(APIView):
+    def get(self, request):
+        newslink = newsLink.objects.all()
+        s_newslink = NewsLinkSerialiser(newslink, many=True,context={'request':request})
+
+        return Response(s_newslink.data)
+    
