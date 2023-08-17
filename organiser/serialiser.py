@@ -10,7 +10,7 @@ from rest_framework.fields import(
 from rest_framework.serializers import Serializer, HyperlinkedIdentityField
 
 class Tagserialiser(Serializer):
-    id = IntegerField(read_only=True)
+    #id = IntegerField(read_only=True) needs to be kept hidden
     name = CharField(max_length=31)
     slug = SlugField(max_length=31)
     url = HyperlinkedIdentityField(
