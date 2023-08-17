@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     #Third Party
     'rest_framework',
     'django_extensions',
+    'rest_framework_xml',
     #First party
     'blog.apps.BlogConfig',
     'organiser.apps.OrganiserConfig'
