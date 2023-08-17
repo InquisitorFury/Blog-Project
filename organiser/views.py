@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.http import ( require_http_methods)
 from django.views import View
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from .models import *
 import json
 # new imports for serialised models
@@ -47,9 +49,13 @@ def render_xml(serialised_obj):
             )
         
         ).toprettyxml()
-class Tag_asdetail(View):
+
+
+class Tag_asdetail(APIView): # View
     def get(self, request, pk):
-       """ tag = Tag.objects.get(pk=pk)
+        
+        #using json.dumps
+        """ tag = Tag.objects.get(pk=pk)
         tag_json = json.dumps(
             dict(
                 id=tag.pk,
@@ -58,16 +64,34 @@ class Tag_asdetail(View):
             )
         )
         return HttpResponse(tag_json, content_type="application/json")"""
-       tag = Tag.objects.get(pk=pk)
-       s_tag = Tagserialiser(tag)
-       tag_json = render_json(s_tag)
-       tag_xml = render_xml(s_tag)
-       return HttpResponse(tag_json, content_type="application/json")
+       
+        # json renderer and http response
+        """ 
+            tag = Tag.objects.get(pk=pk)
+            s_tag = Tagserialiser(tag)
+            tag_json = render_json(s_tag)
+             tag_xml = render_xml(s_tag)
+            return HttpResponse(tag_json, content_type="application/json")
+        """
     
-class Tag_aslist(View):
+        #rest_framework response, it will figure out the type of response on its own whether its json or xml or whatever
+        tag = Tag.objects.get(pk=pk)
+        s_tag = Tagserialiser(
+            tag,
+            context={'request':request},
+        )
+
+        return Response(s_tag.data)
+   
+      
+    
+class Tag_aslist(APIView): # View
     def get(self, request):
+        """
         tag_list = Tag.objects.all()
-        tag_json = json.dumps(
+        s_tag_list = Tagserialiser(tag_list,many=True) # for when you're expecting a list of tag objects
+         # using json.dumps
+         tag_json = json.dumps(
             [
                
                 dict(
@@ -79,4 +103,12 @@ class Tag_aslist(View):
             ]
             
         )
-        return HttpResponse(tag_json, content_type="application/json")
+
+        
+        #using jsonrenderer
+
+        tag_json = render_json(s_tag_list)
+        """
+        tag_list = Tag.objects.all()
+        s_tag_list = Tagserialiser(tag_list, many=True, context={'request':request})
+        return Response(s_tag_list.data)

@@ -7,12 +7,15 @@ from rest_framework.fields import(
     URLField,
 )
 
-from rest_framework.serializers import Serializer
+from rest_framework.serializers import Serializer, HyperlinkedIdentityField
 
 class Tagserialiser(Serializer):
     id = IntegerField(read_only=True)
     name = CharField(max_length=31)
     slug = SlugField(max_length=31)
+    url = HyperlinkedIdentityField(
+        view_name='tagdetail'
+    )
 
 class Startupserialser(Serializer):
     id = IntegerField(read_only=True)
