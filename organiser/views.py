@@ -112,3 +112,21 @@ class Tag_aslist(APIView): # View
         tag_list = Tag.objects.all()
         s_tag_list = Tagserialiser(tag_list, many=True, context={'request':request})
         return Response(s_tag_list.data)
+    
+
+#startup API view
+class startupAPIDetail(APIView):
+    def get(self,request, slug):
+        startup = Startup.objects.get(slug=slug)
+        s_startup = Startupserialser(startup, context={'request':request})
+
+        return Response(s_startup.data)
+    
+class startupAPIList(APIView):
+    def get(self, request):
+        startup_list = Startup.objects.all()
+        s_startup_list = Startupserialser(startup_list, many=True, context={'request':request})
+
+        return Response(s_startup_list.data)
+    
+

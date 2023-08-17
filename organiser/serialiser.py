@@ -25,7 +25,7 @@ class Startupserialser(Serializer):
     description = CharField()
     date_founded = DateField()
     contact = EmailField()
-    website = URLField(max_length=255)
+    website_link = URLField(max_length=255)
     tags = Tagserialiser(many=True) # many to many field
 
 class NewsLinkSerialiser(Serializer):
