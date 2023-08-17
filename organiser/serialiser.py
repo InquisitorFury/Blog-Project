@@ -39,3 +39,4 @@ class NewsLinkSerialiser(Serializer):
     date_published = DateField()
     article_link = URLField(max_length=255)
     startups = Startupserialser() #foreignKey or many to one relationship
+    #url = HyperlinkedIdentityField(       view_name='newslinkdetail',       lookup_field='slug',   )
