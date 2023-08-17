@@ -14,7 +14,8 @@ class Tagserialiser(Serializer):
     name = CharField(max_length=31)
     slug = SlugField(max_length=31)
     url = HyperlinkedIdentityField(
-        view_name='tagdetail'
+        view_name='tagdetail',
+        lookup_field = "slug",
     )
 
 class Startupserialser(Serializer):

@@ -52,7 +52,7 @@ def render_xml(serialised_obj):
 
 
 class Tag_asdetail(APIView): # View
-    def get(self, request, pk):
+    def get(self, request, slug):
         
         #using json.dumps
         """ tag = Tag.objects.get(pk=pk)
@@ -75,7 +75,7 @@ class Tag_asdetail(APIView): # View
         """
     
         #rest_framework response, it will figure out the type of response on its own whether its json or xml or whatever
-        tag = Tag.objects.get(pk=pk)
+        tag = Tag.objects.get(slug=slug)
         s_tag = Tagserialiser(
             tag,
             context={'request':request},
