@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tag List</title>
+    </head>
+    <body>
+        <h2>Tag List<h2>
+        {% if tag_list %} <!-- no need to have this if statement-->
+            <ul>
+                {% for tag in tag_list %}  
+                    <li>
+                        <a href="">
+                            {{ tag.name|title }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul> 
+        {% else  %}
+            <p><em>There are currently no Tags available.</em></p>
+        {% endif %}
+    </body>
+</html>
