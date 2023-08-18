@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer,HyperlinkedModelSerializer
 
 from .models import Post
 
@@ -9,7 +9,7 @@ from organiser.serialiser import (
 
 class Postserialiser(ModelSerializer):
     tags = Tagserialiser(many=True) # many to many relationship
-    Startupserialser = Startupserialser(many=True)
+    Startups = Startupserialser(many=True)
 
     class Meta:
         model = Post

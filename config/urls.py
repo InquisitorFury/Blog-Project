@@ -18,7 +18,9 @@ from django.contrib import admin
 from django.urls import path,include
 
 from organiser import urls as organiser_urls
+from blog import urls as blog_urls
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include(organiser_urls)),
+    path("", include(blog_urls)),
 ]
