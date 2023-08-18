@@ -17,10 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 
-from organiser import urls as organiser_urls
-from blog import urls as blog_urls
+from organiser.routers import urlpatterns as organiser_urls
+from blog.routers import urlpatterns as blog_urls
+api_urls = blog_urls + organiser_urls
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include(organiser_urls)),
-    path("", include(blog_urls)),
+    path("api/v1/", include(api_urls))
 ]
