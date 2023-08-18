@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.template import loader
+from django.views.decorators.http import require_safe # shortcut, safety method for http methods
 from django.views.decorators.http import ( require_http_methods)
 from django.views import View
 from rest_framework.response import Response
@@ -19,7 +21,7 @@ class HelloWorld(View):
     def get(self, request):
         return HttpResponse("Hello world")
 """
-
+#API CREATION 
 def render_json(serialised_obj):
     """shortcut to make the rendering code easier to read"""
     print(
@@ -144,4 +146,43 @@ class newslinkAPIList(APIView):
         s_newslink = NewsLinkSerialiser(newslink, many=True,context={'request':request})
 
         return Response(s_newslink.data)
+
+#html 
+@require_safe
+def tag_list(request):
+        tag_list = Tag.objects.all()
+        context = {"tag_list": tag_list}
+        return render(request, "tag/list.html", context)
     
+@require_safe
+def tag_detail(request, slug):
+        tag = Tag.objects.get(slug=slug)
+        template = loader.get_template("tag/detail.html")
+        context = {"tag": tag}
+        html_content = template.render(context)
+        return render(request, "tag/detail.html", context)
+
+@require_safe
+def startup_list(request):
+        startup_list = Startup.objects.all()
+        context = {"startup_list": startup_list}
+        return render(request, "startup/list.html", context)
+    
+@require_safe
+def startup_detail(request, slug):
+        startup = Startup.objects.get(slug=slug)
+        context = {"startup": startup}
+        return render(request, "startup/detail.html", context)
+
+
+@require_safe
+def newslink_list(request):
+        newslink_list = newsLink.objects.all()
+        context = {"newslink_list": newslink_list}
+        return render(request, "newslink/list.html", context)
+    
+@require_safe
+def newslink_detail(request, startup_slug,newslink_slug):
+        newslink = newsLink.objects.get(slug=newslink_slug, startup__slug=startup_slug)
+        context = {"newslink": newslink}
+        return render(request, "newslink/detail.html", context)
