@@ -33,10 +33,11 @@ class Startupserialser(Serializer):
     tags = Tagserialiser(many=True) # many to many field
 
 class NewsLinkSerialiser(Serializer):
-    id = IntegerField(read_only=True)
+   # id = IntegerField(read_only=True)
     title = CharField(max_length=63)
     slug = SlugField(max_length=63)
     date_published = DateField()
     article_link = URLField(max_length=255)
     startups = Startupserialser() #foreignKey or many to one relationship
-    #url = HyperlinkedIdentityField(       view_name='newslinkdetail',       lookup_field='slug',   )
+   
+

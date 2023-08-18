@@ -132,7 +132,8 @@ class startupAPIList(APIView):
 
 class newslinkAPIDetail(APIView):
     def get(self, request, startup_slug, newslink_slug):
-        newslink = newsLink.objects.get(slug=newslink_slug, startups=startup_slug)
+        newslink = newsLink.objects.get(slug=newslink_slug, startups__slug=startup_slug)
+
         s_newslink = NewsLinkSerialiser(newslink, context={'request':request})
 
         return Response(s_newslink.data)
