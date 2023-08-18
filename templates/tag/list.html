@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Tag List</title>
-    </head>
-    <body>
+{% extends parent_template|default:"tag/base.html" %}
+{% block title %}
+    {{ block.super }} - Tag
+{% endblock %}
+{% block content %}
         <h2>Tag List<h2>
         {% if tag_list %} <!-- no need to have this if statement-->
             <ul>
@@ -20,5 +17,4 @@
         {% else  %}
             <p><em>There are currently no Tags available.</em></p>
         {% endif %}
-    </body>
-</html>
+{% endblock %}

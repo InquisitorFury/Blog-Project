@@ -1,21 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Startup List</title>
-    </head>
-    <body>
-        <section>
-            <ul>
-                {% for startup in startup_list %}
-                    <li>
-                        <a href="">
-                            {{ startup.name }}
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </section>
-    </body>
-</html>
+{% extends parent_template|default:"post/base.html" %}
+{% block title %}
+    {{ block.super }} - Startup
+{% endblock %}
+{% block content %}
+    <section>
+        <ul>
+            {% for startup in startup_list %}
+                <li>
+                    <a href="">
+                        {{ startup.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+{% endblock %}
