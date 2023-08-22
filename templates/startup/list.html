@@ -4,14 +4,16 @@
 {% endblock %}
 {% block content %}
     <section>
+        {% for startup in startup_list %}
         <ul>
-            {% for startup in startup_list %}
+            
                 <li>
                     <a href="">
                         {{ startup.name }}
                     </a>
                 </li>
-            {% endfor %}
+            
         </ul>
+        {% endfor %}
     </section>
 {% endblock %}

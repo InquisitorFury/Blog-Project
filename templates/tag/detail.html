@@ -2,24 +2,103 @@
 {% block title %}
     {{ block.super }} - {{ tag.name|title }}
 {% endblock %}
+{% block style %} 
+    <style> 
+        body {
+            align-items: center;
+            text-align: center; 
+         
+        }
+        .titlebackground{
+            background-color: orange;
+            height: 50vh ;
+            width: 100%;
+            display:flex;
+            justify-content: center;
+            flex-direction: column;
+            margin-left:auto;
+            margin-right:auto; 
+            text-align: center; 
+            margin-bottom:2em;
+        }
+        .titlebackground h1{
+            font-size: 50px;
+            font-family:'Courier New';
+            color: white;
+            text-shadow: 1px 1px 13px #000000;
+        }
+        .titlebackground p{
+            font-size: 23px;
+            font-family:'Courier New';
+            color: black;
+            text-shadow: 1px 1px 13px #e2b183;
+        }
+        .startupdescription {
+            background-color: rgb(219, 216, 216);
+            height: 20vh;
+            width: 80%;
+            display:flex;
+            justify-content: center;
+            flex-direction: column;
+            margin-left:auto;
+            margin-right:auto; 
+            text-align: center; 
+            margin-bottom:1em;
+            
+        }
+        .startupdescription a{
+            text-decoration: none;
+        }
+        .startupdescription .startuptitle {
+            font-size: 50px;
+            font-family:'Courier New';
+            color: white;
+            
+        }
+        .startupdescription dl{
+            display:flex;
+            justify-content: center;
+            flex-direction: row;
+            font-size: 13px;
+            font-family:'Courier New';
+            color: rgb(0, 0, 0);
+        }
+        .startupdescription dt{
+            padding: 0px 0px 0px 20px;
+        }
+    </style>
+{% endblock %}
 {% block content %}
     {% if tag.startup_set.all %}
         <section>
-            <h3>Startup{{ tag.startup_set.count| pluralize }}</h3>
-            <p>
-                Tag is asscociated with 
-                {{ tag.startup_set.count }}
-                startup{{ tag.startup_set.count|pluralize }}
-            </p>
-            <ul>
+            <div class="titlebackground">
+                <h1>  Startup{{ tag.startup_set.count| pluralize }}</h1>
+                <p>
+                    {{ tag.name }}
+                    Tag is asscociated with 
+                    {{ tag.startup_set.count }}
+                    startup{{ tag.startup_set.count|pluralize }}
+                </p>
+            </div>
+            
                 {% for startup in tag.startup_set.all %}
-                    <li>
-                        <a href="">
+                    <div class="startupdescription">
+                        <a href="" class="startuptitle">
                             {{ startup.name|title }}
+                                
                         </a>
-                    </li>
+                        
+                        <dl>
+                            <dt>Date Founded </dt>
+                            <dd>{{ startup.date_founded|date:"F j, Y" }}</dd>
+                            <dt> Website</dt>
+                            <dd>{{ startup.website_link|urlize }}</dd>
+                            <dt> Contact</dt>
+                            <dd>{{ startup.contact}}</dd>
+                        </dl>
+                    </div>
+                       
                 {% endfor %}
-            </ul>
         </section>
     {% endif %}
 {% endblock %}
