@@ -131,7 +131,7 @@
                 {% for startup in tag.startup_set.all %}
                  
                     <div class="startupdescription">
-                        <a href="" class="startuptitle">
+                        <a href="{{ startup.get_absolute_url }}" class="startuptitle">
                             {{ startup.name|title }}
                                 
                         </a>

@@ -23,7 +23,7 @@
                             <ul>
                                 {% for startup in startup_list %}
                                     <li>
-                                        <a href="">
+                                        <a href="{{ startup.get_absolute_url }}">
                                             {{ startup.name }}
                                         </a>
                                     </li>
@@ -39,7 +39,7 @@
                             <ul>
                                 {% for tag in tags_list %}
                                     <li>
-                                        <a href="">
+                                        <a href="{{ tag.get_absolute_url }}">
                                             {{ tag.name }}
                                         </a>
                                     </li>

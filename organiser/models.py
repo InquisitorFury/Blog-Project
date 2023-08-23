@@ -2,6 +2,7 @@ from typing import Type
 from django.db import models
 from django.db.models.options import Options
 from django_extensions.db.fields import AutoSlugField
+from django.urls import reverse
 # Create your models here.
 class Tag(models.Model):
     name = models.CharField(
@@ -17,7 +18,11 @@ class Tag(models.Model):
 
     def __str__(self): # refered to as method/behaviours of classes and also called dunders
         return self.name
-
+    
+    def get_absolute_url(self):
+        return reverse(
+            "tag_detail", kwargs={ "slug": self.slug}
+        )
 class Startup(models.Model):
     name = models.CharField(
         max_length=31,
@@ -39,6 +44,10 @@ class Startup(models.Model):
         
     def __str__(self): # refered to as method/behaviours of classes and also called dunders
         return self.name
+    def get_absolute_url(self):
+        return reverse(
+            "startup_detail", kwargs={ "slug":self.slug}
+        )
     
 class newsLink(models.Model):
     title = models.CharField(
