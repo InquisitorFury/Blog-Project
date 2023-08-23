@@ -4,7 +4,19 @@ from django.template import loader
 from django.views.decorators.http import require_safe # shortcut, safety method for http methods
 from django.views.decorators.http import ( require_http_methods)
 from django.views import View
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
+from rest_framework.status import (
+     HTTP_201_CREATED,
+     HTTP_400_BAD_REQUEST,
+     HTTP_200_OK,
+     HTTP_204_NO_CONTENT,
+)
+from rest_framework.generics import(
+    ListAPIView,
+    ListCreateAPIView,
+    RetrieveAPIView,
+)
 from rest_framework.views import APIView
 from .models import Tag,newsLink,Startup
 import json
@@ -84,12 +96,75 @@ class Tag_asdetail(APIView): # View
         )
 
         return Response(s_tag.data)
-   
-      
-    
-class Tag_aslist(APIView): # View
-    def get(self, request):
+    def put(self, request, slug):
+        """Update existing Tag upon PUT
+
+        ALL Tag fields are expected.
         """
+        tag = get_object_or_404(Tag, slug=slug)
+        s_tag = Tagserialiser(
+             tag,
+             data = request.data,
+             context={"request":request}
+        )
+        if s_tag.is_valid():
+             s_tag.save()
+             return Response(
+                  s_tag.data, status=HTTP_200_OK
+             )
+        return Response(
+             s_tag.errors,
+             status=HTTP_400_BAD_REQUEST
+        )
+    def patch(self, request, slug):
+        """Update existing Tag upon PATCH"""
+        tag = get_object_or_404(Tag, slug=slug)
+        s_tag = Tagserialiser(
+                tag,
+                data = request.data,
+                context={"request":request}
+        )
+        if s_tag.is_valid():
+                s_tag.save()
+                return Response(
+                    s_tag.data, status=HTTP_200_OK
+                )
+        return Response(
+                s_tag.errors,
+                status=HTTP_400_BAD_REQUEST
+        )
+    def delete(self,request, slug):
+        """DELETE the Tag with specificed slug"""
+        tag = get_object_or_404(Tag, slug=slug)
+        tag.delete()
+        return Response(
+            status=HTTP_204_NO_CONTENT
+        )
+class Tag_aslist(ListCreateAPIView): # View
+   #Retrieving API data
+   queryset = Tag.objects.all()
+   serializer_class = Tagserialiser
+"""   def post(self,request):
+        "Create new Tag upon Post"
+        s_tag = self.serializer_class(
+             data = request.data,
+             context={"request":request}
+        )
+        if s_tag.is_valid():
+            s_tag.save()
+            return Response(
+                s_tag.data,
+                status=HTTP_201_CREATED
+            )
+        return Response(
+            s_tag.errors, 
+            status=HTTP_400_BAD_REQUEST
+        )
+   """
+
+""" 
+   def get(self, request):
+        "
         tag_list = Tag.objects.all()
         s_tag_list = Tagserialiser(tag_list,many=True) # for when you're expecting a list of tag objects
          # using json.dumps
@@ -110,10 +185,11 @@ class Tag_aslist(APIView): # View
         #using jsonrenderer
 
         tag_json = render_json(s_tag_list)
-        """
+        "
         tag_list = Tag.objects.all()
         s_tag_list = Tagserialiser(tag_list, many=True, context={'request':request})
         return Response(s_tag_list.data)
+    """
     
 
 #startup API view
@@ -147,6 +223,8 @@ class newslinkAPIList(APIView):
 
         return Response(s_newslink.data)
 
+
+
 #html 
 @require_safe
 def tag_list(request):
@@ -173,16 +251,3 @@ def startup_detail(request, slug):
         startup = Startup.objects.get(slug=slug)
         context = {"startup": startup}
         return render(request, "startup/detail.html", context)
-
-
-@require_safe
-def newslink_list(request):
-        newslink_list = newsLink.objects.all()
-        context = {"newslink_list": newslink_list}
-        return render(request, "newslink/list.html", context)
-    
-@require_safe
-def newslink_detail(request, startup_slug,newslink_slug):
-        newslink = newsLink.objects.get(slug=newslink_slug, startup__slug=startup_slug)
-        context = {"newslink": newslink}
-        return render(request, "newslink/detail.html", context)

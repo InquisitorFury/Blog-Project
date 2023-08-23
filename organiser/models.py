@@ -11,7 +11,8 @@ class Tag(models.Model):
     slug = AutoSlugField(
         max_length=31,
         help_text="A label for URL config",
-        populate_from=['name'])
+        populate_from=['name'],
+        )
     
     class Meta:
         ordering = ["name"]
