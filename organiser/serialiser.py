@@ -7,25 +7,19 @@ from rest_framework.fields import(
     URLField,
 )
 
-from rest_framework.serializers import Serializer, HyperlinkedIdentityField, ModelSerializer,HyperlinkedModelSerializer
+from rest_framework.serializers import Serializer, HyperlinkedIdentityField, ModelSerializer
 from .models import *
-class Tagserialiser(HyperlinkedModelSerializer):
+class Tagserialiser(ModelSerializer):
     #id = IntegerField(read_only=True) needs to be kept hidden
     #name = CharField(max_length=31)
     #slug = SlugField(max_length=31, read_only=True)
-
+    url = HyperlinkedIdentityField(
+        view_name='tag-detail',
+        lookup_field = "slug",
+    )
     class Meta:
         model = Tag
         fields = "__all__"
-        extra_kwargs = {
-            'url': {
-            
-                'view_name': 'tag-detail',
-                "lookup_field":"slug",
-            }
-        }
-
-
 
 class Startupserialser(ModelSerializer):
     #id = IntegerField(read_only=True)
@@ -42,7 +36,7 @@ class Startupserialser(ModelSerializer):
     #tags = Tagserialiser(many=True) # many to many field
     class Meta:
         model = Startup
-        fields = fields = ["name","slug","url"]
+        fields = "__all__"
 
 class NewsLinkSerialiser(ModelSerializer):
    # id = IntegerField(read_only=True)
