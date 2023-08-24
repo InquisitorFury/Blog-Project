@@ -207,7 +207,7 @@ class startupAPIList(APIView):
 
         return Response(s_startup_list.data)
 
-
+#newslink API view
 class newslinkAPIDetail(APIView):
     def get(self, request, startup_slug, newslink_slug):
         newslink = newsLink.objects.get(slug=newslink_slug, startups__slug=startup_slug)
