@@ -6,8 +6,14 @@ from rest_framework.fields import(
     EmailField,
     URLField,
 )
-
-from rest_framework.serializers import Serializer, HyperlinkedIdentityField, ModelSerializer
+from rest_framework.reverse import reverse
+from rest_framework.serializers import (
+  Serializer, 
+  HyperlinkedIdentityField, 
+  ModelSerializer, 
+  SerializerMethodField ,
+  HyperlinkedRelatedField,
+)
 from .models import *
 class Tagserialiser(ModelSerializer):
     #id = IntegerField(read_only=True) needs to be kept hidden
@@ -62,8 +68,26 @@ class NewsLinkSerialiser(ModelSerializer):
     #slug = SlugField(max_length=63, read_only=True)
     #date_published = DateField()
     # #article_link = URLField(max_length=255)
-    #startups = Startupserialser() #foreignKey or many to one relationship
+    url = SerializerMethodField() # default matches the method name get to the startup 
+    startups = HyperlinkedRelatedField(
+        queryset = Startup.objects.all(),
+        lookup_field = "slug",
+        view_name="startup-detail"
+    ) #foreignKey or many to one relationship
     class Meta:
         model = newsLink
-        fields = "__all__"
+        exclude = ("id",)
 
+    def get_url(self, newslink):
+        """build full URL for NewsLink API detail"""
+        relative_url = reverse(
+        "newslinkdetail",
+        kwargs=dict(
+            startup_slug=newslink.startups.slug,
+            newslink_slug=newslink.slug,
+        )
+        )
+        request = self.context.get('request')
+        if request:
+            return request.build_absolute_uri(relative_url)
+        return relative_url
