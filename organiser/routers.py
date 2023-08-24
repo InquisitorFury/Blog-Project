@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import *
-from .viewssets import TagViewSet
+from .viewssets import *
 
 from rest_framework.routers import SimpleRouter
 """
@@ -33,11 +33,22 @@ urlpatterns = [
 
 api_router = SimpleRouter()
 api_router.register("tag",TagViewSet,basename="tag")
+api_router.register("startup",StartupViewSet,basename="startup")
 api_routes = api_router.urls
 
+
+urlpatterns = api_routes +  [
+
+    path("newslink/<str:startup_slug>/<str:newslink_slug>", newslinkAPIDetail.as_view(), name="newslinkdetail"),
+    path("newslink/", newslinkAPIList.as_view(), name="newslinklist"),
+]
+
+"""
+using normal views the url routes are 
 urlpatterns = api_routes +  [
     path("startup/<str:slug>", startupAPIDetail.as_view(), name="startupdetail"),
     path("startup/", startupAPIList.as_view(), name="startuplist"),
     path("newslink/<str:startup_slug>/<str:newslink_slug>", newslinkAPIDetail.as_view(), name="newslinkdetail"),
     path("newslink/", newslinkAPIList.as_view(), name="newslinklist"),
 ]
+"""
