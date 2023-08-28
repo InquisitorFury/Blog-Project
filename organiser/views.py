@@ -1,16 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404,redirect
 from django.http import HttpResponse
 from django.template import loader
 from django.views.decorators.http import require_safe # shortcut, safety method for http methods
 from django.views.decorators.http import ( require_http_methods)
 from django.views import View
-from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.status import (
      HTTP_201_CREATED,
      HTTP_400_BAD_REQUEST,
      HTTP_200_OK,
      HTTP_204_NO_CONTENT,
+     
 )
 from rest_framework.generics import(
     ListAPIView,
@@ -225,7 +225,7 @@ class newslinkAPIList(APIView):
 
 
 
-#html 
+#html get
 @require_safe
 def tag_list(request):
         tag_list = Tag.objects.all()
@@ -251,3 +251,68 @@ def startup_detail(request, slug):
         startup = Startup.objects.get(slug=slug)
         context = {"startup": startup}
         return render(request, "startup/detail.html", context)
+
+
+#forms
+from .forms import *
+
+class tag_create(View):
+    def get(self, request):
+        tagform = Tagform()
+        context = {"form":tagform,"update":False}
+        return render(request, "tag/form.html", context)
+    def post(self,request):
+        tagform = Tagform(request.POST)
+        
+        if tagform.is_valid():
+             tag = tagform.save()
+             return redirect(tag.get_absolute_url())
+        #invalid form
+        context = {"form":tagform,"update":False}
+        return render(request, "tag/form.html", context)
+
+
+class tag_update(View):
+    def get(self, request,slug):
+        tag = get_object_or_404(Tag, slug=slug)
+        tagform = Tagform(instance=tag)
+        context = {"tag":tag,"form":tagform,"update":True}
+        return render(request, "tag/form.html", context)
+    def post(self,request,slug):
+        tag = get_object_or_404(Tag, slug=slug)
+        tagform = Tagform(request.POST,instance=tag) # boundform
+        
+        if tagform.is_valid():
+             tag = tagform.save()
+             return redirect(tag.get_absolute_url())
+        #invalid form
+        context = {"tag":tag,"form":tagform,"update":True}
+        return render(request, "tag/form.html", context)
+
+class tag_delete(View):
+    def get(self, request,slug):
+        tag = get_object_or_404(Tag, slug=slug)
+        context = {"tag":tag}
+        return render( request, "tag/confirm_delete.html", context)
+    def post(self, request,slug):
+        tag = get_object_or_404(Tag, slug=slug)
+        tag.delete()
+        return redirect(reverse("tag_list"))
+    
+class startup_create(View):
+    def get(self, request):
+        pass
+    def post(self,request):
+        pass
+
+class startup_update(View):
+    def get(self, request,slug):
+        pass
+    def post(self,request,slug):
+        pass
+
+class startup_delete(View):
+    def delete(self, request,slug):
+        pass
+
+

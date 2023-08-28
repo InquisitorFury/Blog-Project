@@ -1,0 +1,16 @@
+{% extends parent_template|default:"tag/base.html" %}
+{% block title %}
+    {{ tag.name }}: deletE?
+{% endblock %}
+{% block content %}
+    <form action="." method="post">
+        {% csrf_token %}
+        <p>
+            Are you sure want to delete tag {{ tag.name }}?
+        </p>
+        <a href="{{ tag.get_absolute_url }}">
+            Cancel
+        </a>
+        <button type="submit"> Delete Tag</button>
+    </form>
+{% endblock %}
