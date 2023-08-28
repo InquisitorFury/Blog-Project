@@ -6,10 +6,17 @@ from django.forms import (
 )
 from .models import *
 from django.core.exceptions import ValidationError
-
+import re
 class LowercaseNameMixin:
     def clean_name(self):
-        return self.cleaned_data["name"].lower()
+        name  = self.cleaned_data["name"]
+        nameregex = re.search("^(create)\w*|^(post)\w*|^(delete)\w*|^(patch)\w*|^(put)\w*", name)
+        if nameregex != None:
+            raise ValidationError(
+                f"slug may not be (create,delete,post,update,patch, put)."
+            )
+        print(nameregex)
+        return name.lower()
     
 class SlugCleanMixin: #mixin classs to ensure slug field is not "create"
     """Mixin class to ensure slug field is not 'create' """
@@ -24,7 +31,7 @@ class SlugCleanMixin: #mixin classs to ensure slug field is not "create"
         return slug
 
     
-class Tagform(ModelForm,SlugCleanMixin): # modelform calls a validation on the fields such as our slug to stop it being called 
+class Tagform(ModelForm,LowercaseNameMixin): # modelform calls a validation on the fields such as our slug to stop it being called 
     """HTML forms for Tag objects"""
 
     class Meta:
