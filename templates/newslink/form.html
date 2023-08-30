@@ -1,0 +1,11 @@
+{% extends parent_template|default:"newslink/base.html" %}
+{% block title %}
+    {{ block.super }} - {% if update %}Update{% else %}Create{% endif%} newslink
+{% endblock %}
+{% block content %}
+    <form action="." method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit"> {% if update %}Update{% else %}Create{% endif%}  newslink</button>
+    </form>
+{% endblock %}

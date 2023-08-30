@@ -22,7 +22,7 @@ class Tag(models.Model):
     
     def get_absolute_url(self):
         return reverse(
-            "tag_detail", kwargs={ "slug": self.slug}
+            "organiser:tag_detail", kwargs={ "slug": self.slug}
         )
 class Startup(models.Model):
     name = models.CharField(
@@ -47,7 +47,7 @@ class Startup(models.Model):
         return self.name
     def get_absolute_url(self):
         return reverse(
-            "startup_detail", kwargs={ "slug":self.slug}
+            "organiser:startup_detail", kwargs={ "slug":self.slug}
         )
     
 class newsLink(models.Model):

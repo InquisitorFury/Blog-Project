@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.views.decorators.http import require_safe # shortcut, safety method for http methods
 from django.views.decorators.http import ( require_http_methods)
+from django.urls import reverse_lazy
 from django.views import View
 from rest_framework.response import Response
 from rest_framework.status import (
@@ -16,6 +17,12 @@ from rest_framework.generics import(
     ListAPIView,
     ListCreateAPIView,
     RetrieveAPIView,
+)
+
+from django.views.generic import (
+     CreateView,
+     UpdateView,
+     DeleteView,
 )
 from rest_framework.views import APIView
 from .models import Tag,newsLink,Startup
@@ -245,12 +252,14 @@ def startup_list(request):
         startup_list = Startup.objects.all()
         context = {"startup_list": startup_list}
         return render(request, "startup/list.html", context)
-    
+"""
 @require_safe
 def startup_detail(request, slug):
         startup = Startup.objects.get(slug=slug)
-        context = {"startup": startup}
+        context = {"startup": startup, "newslink_create":False}
         return render(request, "startup/detail.html", context)
+"""
+
 
 
 #forms
@@ -299,20 +308,54 @@ class tag_delete(View):
         tag.delete()
         return redirect(reverse("tag_list"))
     
-class startup_create(View):
-    def get(self, request):
-        pass
-    def post(self,request):
-        pass
+class startup_create(CreateView):
+    form_class = StartupForm
+    model = Startup
+    template_name = "startup/form.html"
+    extra_context = {"update":False}
 
-class startup_update(View):
-    def get(self, request,slug):
-        pass
-    def post(self,request,slug):
-        pass
+class startup_update(UpdateView):
+    form_class = StartupForm
+    model = Startup
+    template_name = "startup/form.html"
+    extra_context = {"update":True}
 
-class startup_delete(View):
-    def delete(self, request,slug):
-        pass
+class startup_delete(DeleteView):
+    model = Startup
+    template_name = "startup/confirm_delete.html"
+    success_url = reverse_lazy("startup_list")
+"""
+class newslink_create(CreateView):
+    form_class = newslinkForm
+    model = newsLink
+    template_name = "newslink/form.html"
+    extra_context = {"update":False}
+    success_url = reverse_lazy("organiser:startup_list")
 
+class newslink_create(UpdateView):
+    form_class = newslinkForm
+    model = newsLink
+    template_name = "newslink/form.html"
+    extra_context = {"update":True}
+    success_url = reverse_lazy("organiser:startup_list")
 
+class newslink_delete(DeleteView):
+    model = newsLink
+    template_name = "newslink/confirm_delete.html"
+    success_url = reverse_lazy("startup_list")
+
+"""
+class startup_detail(View):
+    def get(self,request, slug):
+        form = newslinkForm()
+        startup = Startup.objects.get(slug=slug)
+        context = {"startup": startup, "form": form, "newslink_create":True}
+        return render(request, "startup/detail.html", context)
+    def post(self, request, slug):
+        startup = Startup.objects.get(slug=slug)
+        form = newslinkForm(request.POST)
+        if form.is_valid():
+            newslink = form.save()
+            redirect(reverse("organiser:startup_detail", kwargs={ "slug":startup.slug}))
+        context = {"startup": startup, "form": form, "newslink_create":True}
+        return render(request, "startup/detail.html",context)

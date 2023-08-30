@@ -56,3 +56,11 @@ class StartupForm(
     class Meta:
         model = Startup
         fields = "__all__"
+
+
+class newslinkForm(
+    LowercaseNameMixin, SlugCleanMixin, ModelForm
+):
+    class Meta:
+        model = newsLink
+        fields = "__all__"
