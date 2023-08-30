@@ -6,11 +6,19 @@ from rest_framework.generics import(
     ListAPIView,
     RetrieveAPIView,
 )
-from django.views import View
+from django.views import (
+    View
+)
+from django.views.generic import (
+     CreateView,
+     UpdateView,
+     DeleteView,
+)
+from .forms import *
 from django.views.generic import ListView
 from .models import *
 from .serialiser import *
-
+from django.urls import reverse, reverse_lazy
 class PostAPIList(ListAPIView):
     """return data for multiple post objects"""
     queryset = Post.objects.all()
@@ -51,3 +59,20 @@ class PostDetail(View):
         )
         context = {"post":post}
         return render(request, "post/detail.html",context)
+    
+class Postcreate(CreateView):
+    form_class = PostForm
+    model = Post
+    template_name = "post/form.html"
+    extra_context = {"update":False}
+
+class Postupdate(UpdateView):
+    form_class = PostForm
+    model = Post
+    template_name = "post/form.html"
+    extra_context = {"update":True}
+
+class Postdelete(DeleteView):
+    model = Post
+    template_name = "post/confirm_delete.html"
+    success_url = reverse_lazy("post_list")
